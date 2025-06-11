@@ -58,6 +58,11 @@
       <!-- luz direcional -->
       <a-entity light="type: directional; color: #ffffff; intensity: 0.7" position="1 1 0.5"></a-entity>
 
+      <!-- 3 luzes pontuais em posições diferentes -->
+      <a-entity light="type: point; color: #ffffff; intensity: 0.5; distance: 10" position="2 2 2"></a-entity>
+      <a-entity light="type: point; color: #ffffff; intensity: 0.5; distance: 10" position="-2 2 2"></a-entity>
+      <a-entity light="type: point; color: #ffffff; intensity: 0.5; distance: 10" position="0 2 -2"></a-entity>
+
       <!-- marcador Hiro com gestos ativados e persistência -->
       <a-marker preset="hiro" persistent-marker raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
         <!-- modelo GLTF interativo -->
