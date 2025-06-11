@@ -3,17 +3,17 @@
   <head>
     <title>AR.js – Modelo interativo com gesto</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    
+
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/fcor/arjs-gestures@master/dist/gestures.js"></script>
-    
+
     <style>
       body { margin: 0; overflow: hidden; }
       canvas { position: absolute; top: 0; left: 0; }
     </style>
 
-    <!-- Script para limitar rotação ao eixo Y -->
+    <!-- Rotação somente no eixo Y -->
     <script>
       AFRAME.registerComponent('horizontal-only-rotation', {
         tick: function () {
@@ -29,33 +29,54 @@
         }
       });
     </script>
+
+    <!-- Mostrar modelo apenas após primeira detecção -->
+    <script>
+      AFRAME.registerComponent('show-once-detected', {
+        init: function () {
+          const model = this.el;
+          model.setAttribute('visible', false);
+
+          const marker = model.parentEl;
+          marker.addEventListener('markerFound', () => {
+            if (!model.getAttribute('visible')) {
+              model.setAttribute('visible', true);
+            }
+          });
+        }
+      });
+    </script>
   </head>
 
   <body>
     <a-scene embedded arjs="sourceType: webcam;" gesture-detector>
-      <!-- luz ambiente com intensidade ajustada -->
-      <a-entity light="type: ambient; color: #ffffff; intensity: 1.3"></a-entity>
 
-      <!-- luz direcional -->
-      <a-entity light="type: directional; color: #ffffff; intensity: 0.7" position="1 1 0.5"></a-entity>
+      <!-- luz do tipo sol com tom laranja de pôr do sol -->
+      <a-entity light="type: directional; color: #ffcc66; intensity: 1.2; castShadow: true" 
+                light="type: sun" 
+                position="0.5 1 -0.5" 
+                rotation="-45 45 0">
+      </a-entity>
 
-      <!-- marcador Hiro com persistência do modelo mesmo sem tracking -->
+      <!-- marcador Hiro -->
       <a-marker 
-        preset="hiro" 
-        raycaster="objects: .clickable" 
-        emitevents="true" 
+        preset="hiro"
+        raycaster="objects: .clickable"
+        emitevents="true"
         cursor="fuse: false; rayOrigin: mouse;"
         arjs-anchor="changeMatrixMode: cameraTransformMatrix">
-        
-        <!-- modelo GLTF interativo -->
+
+        <!-- modelo GLTF invisível até primeira detecção -->
         <a-gltf-model
           class="clickable"
           src="unamds.gltf"
           position="0 0 0"
           scale="1 1 1"
           rotation="0 0 0"
+          visible="false"
           gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
-          horizontal-only-rotation>
+          horizontal-only-rotation
+          show-once-detected>
         </a-gltf-model>
       </a-marker>
 
