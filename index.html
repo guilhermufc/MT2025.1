@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js – Modelo interativo com gesto</title>
+    <title>AR.js – Modelo com Iluminação Complexa de Pôr do Sol</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
@@ -13,7 +13,7 @@
       canvas { position: absolute; top: 0; left: 0; }
     </style>
 
-    <!-- Rotação somente no eixo Y -->
+    <!-- Componente para rotação apenas no eixo Y -->
     <script>
       AFRAME.registerComponent('horizontal-only-rotation', {
         tick: function () {
@@ -30,7 +30,7 @@
       });
     </script>
 
-    <!-- Mostrar modelo apenas após primeira detecção -->
+    <!-- Mostrar modelo após a primeira detecção -->
     <script>
       AFRAME.registerComponent('show-once-detected', {
         init: function () {
@@ -49,16 +49,31 @@
   </head>
 
   <body>
-    <a-scene embedded arjs="sourceType: webcam;" gesture-detector>
+    <a-scene
+      embedded
+      arjs="sourceType: webcam;"
+      gesture-detector
+      shadow="type: pcfsoft">
 
-      <!-- luz do tipo sol com tom laranja de pôr do sol -->
-      <a-entity light="type: directional; color: #ffcc66; intensity: 1.2; castShadow: true" 
-                light="type: sun" 
-                position="0.5 1 -0.5" 
-                rotation="-45 45 0">
+      <!-- Céu com gradiente de pôr do sol -->
+      <a-sky color="#ffcc88"></a-sky>
+
+      <!-- Luz solar principal (quente e inclinada) -->
+      <a-entity 
+        light="type: directional; color: #ff9933; intensity: 1.2; castShadow: true"
+        light="type: sun"
+        position="1 2 -1"
+        rotation="-45 45 0">
       </a-entity>
 
-      <!-- marcador Hiro -->
+      <!-- Luz solar secundária (fria, como luz ambiente refletida) -->
+      <a-entity 
+        light="type: directional; color: #6699cc; intensity: 0.3"
+        position="-1 1 1"
+        rotation="45 -45 0">
+      </a-entity>
+
+      <!-- Marcador Hiro com o modelo 3D -->
       <a-marker 
         preset="hiro"
         raycaster="objects: .clickable"
@@ -66,7 +81,7 @@
         cursor="fuse: false; rayOrigin: mouse;"
         arjs-anchor="changeMatrixMode: cameraTransformMatrix">
 
-        <!-- modelo GLTF invisível até primeira detecção -->
+        <!-- Modelo interativo -->
         <a-gltf-model
           class="clickable"
           src="unamds.gltf"
@@ -76,11 +91,12 @@
           visible="false"
           gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
           horizontal-only-rotation
-          show-once-detected>
+          show-once-detected
+          shadow="cast: true; receive: true">
         </a-gltf-model>
       </a-marker>
 
-      <!-- câmera AR -->
+      <!-- Câmera -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
