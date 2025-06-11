@@ -26,19 +26,43 @@
           }
         }
       });
+
+      // Controla visibilidade do modelo quando perde/ganha tracking
+      AFRAME.registerComponent('keep-visible-on-marker-lost', {
+        init: function () {
+          const marker = this.el;
+          const model = this.el.querySelector('a-gltf-model');
+
+          marker.addEventListener('markerLost', () => {
+            // Quando perder tracking, mantém o modelo visível
+            model.setAttribute('visible', true);
+            // Opcional: você pode mudar posição ou adicionar lógica aqui
+          });
+
+          marker.addEventListener('markerFound', () => {
+            // Quando encontrar o marcador, mantém o modelo visível
+            model.setAttribute('visible', true);
+          });
+        }
+      });
     </script>
   </head>
 
   <body>
     <a-scene embedded arjs gesture-detector>
       <!-- luz ambiente com intensidade aumentada -->
-      <a-entity light="type: ambient; color: #ffffff; intensity: 1,3"></a-entity>
+      <a-entity light="type: ambient; color: #ffffff; intensity: 1.3"></a-entity>
 
       <!-- luz direcional com intensidade aumentada -->
       <a-entity light="type: directional; color: #ffffff; intensity: 0.7" position="1 1 0.5"></a-entity>
 
-      <!-- marcador Hiro com gestos ativados -->
-      <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+      <!-- marcador Hiro com gestos ativados e componente customizado -->
+      <a-marker
+        preset="hiro"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse"
+        keep-visible-on-marker-lost>
         <!-- modelo GLTF interativo -->
         <a-gltf-model
           class="clickable"
