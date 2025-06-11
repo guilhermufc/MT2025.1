@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js – Modelo com Iluminação e Persistência</title>
+    <title>AR.js – Modelo interativo com gesto</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/fcor/arjs-gestures@master/dist/gestures.js"></script>
-
     <style>
       body { margin: 0; overflow: hidden; }
       canvas { position: absolute; top: 0; left: 0; }
     </style>
 
-    <!-- Componente: restringe rotação ao eixo Y -->
+    <!-- Script para limitar rotação ao eixo Y -->
     <script>
       AFRAME.registerComponent('horizontal-only-rotation', {
         tick: function () {
@@ -29,18 +27,22 @@
         }
       });
 
-      // Componente: ativa o modelo após o 1º tracking
-      AFRAME.registerComponent('show-model-once-tracked', {
+      // Componente para manter modelo visível após perda do marcador
+      AFRAME.registerComponent('persistent-marker', {
         init: function () {
-          const model = document.querySelector('#model');
-          const marker = document.querySelector('a-marker');
-          model.setAttribute('visible', 'false');
-          let shown = false;
-
+          const marker = this.el;
           marker.addEventListener('markerFound', () => {
-            if (!shown) {
-              shown = true;
-              model.setAttribute('visible', 'true');
+            this.model && (this.model.object3D.visible = true);
+          });
+          marker.addEventListener('markerLost', () => {
+            // Não esconde o modelo
+          });
+
+          // Espera o carregamento do modelo
+          marker.addEventListener('loaded', () => {
+            this.model = marker.querySelector('[gltf-model]');
+            if (this.model) {
+              this.model.object3D.visible = false; // começa invisível
             }
           });
         }
@@ -49,38 +51,28 @@
   </head>
 
   <body>
-    <a-scene embedded arjs="sourceType: webcam;" gesture-detector show-model-once-tracked>
-      
-      <!-- Luzes: 3 pontos + ambiente -->
-      <a-entity light="type: directional; color: #fff; intensity: 0.8" position="2 4 1"></a-entity>
-      <a-entity light="type: directional; color: #fff; intensity: 0.4" position="-2 2 1"></a-entity>
-      <a-entity light="type: directional; color: #fff; intensity: 0.3" position="0 2 -3"></a-entity>
-      <a-entity light="type: ambient; color: #fff; intensity: 0.3"></a-entity>
+    <a-scene embedded arjs gesture-detector>
+      <!-- luz ambiente -->
+      <a-entity light="type: ambient; color: #ffffff; intensity: 1.3"></a-entity>
 
-      <!-- Marcador (ancoragem) -->
-      <a-marker 
-        id="marker"
-        preset="hiro" 
-        emitevents="true" 
-        arjs-anchor="changeMatrixMode: cameraTransformMatrix">
+      <!-- luz direcional -->
+      <a-entity light="type: directional; color: #ffffff; intensity: 0.7" position="1 1 0.5"></a-entity>
+
+      <!-- marcador Hiro com gestos ativados e persistência -->
+      <a-marker preset="hiro" persistent-marker raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+        <!-- modelo GLTF interativo -->
+        <a-gltf-model
+          class="clickable"
+          src="unamds.gltf"
+          position="0 0 0"
+          scale="1 1 1"
+          rotation="0 0 0"
+          gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
+          horizontal-only-rotation>
+        </a-gltf-model>
       </a-marker>
 
-      <!-- Modelo separado (não visível no início) -->
-      <a-entity
-        id="model"
-        position="0 0 0"
-        scale="1 1 1"
-        rotation="0 0 0"
-        visible="false"
-        gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
-        horizontal-only-rotation>
-        
-        <a-gltf-model 
-          src="unamds.gltf"
-          class="clickable">
-        </a-gltf-model>
-      </a-entity>
-
+      <!-- câmera AR -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
