@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
   <head>
-    <title>AR.js com A-Frame - Marker Hiro</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/2.2.1/aframe/build/aframe-ar.min.js"></script>
-    <style>
-      body, html { margin: 0; overflow: hidden; }
-    </style>
+    <meta charset="UTF-8" />
+    <title>AR.js com A-Frame - Cubo no Marker Hiro</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/1.7.2/aframe/build/aframe-ar.min.js"></script>
   </head>
-  <body>
-    <a-scene embedded arjs>
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene
+      embedded
+      arjs="sourceType: webcam; debugUIEnabled: false;"
+      vr-mode-ui="enabled: false"
+      renderer="logarithmicDepthBuffer: true;"
+    >
+      <!-- Marker Hiro -->
       <a-marker preset="hiro">
+        <!-- Cubo simples 1x1x1 -->
         <a-box position="0 0.5 0" material="color: blue;"></a-box>
       </a-marker>
+
+      <!-- Câmera AR -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
