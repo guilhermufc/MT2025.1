@@ -27,21 +27,19 @@
         }
       });
 
-      // Controla visibilidade do modelo quando perde/ganha tracking
-      AFRAME.registerComponent('keep-visible-on-marker-lost', {
+      // Script para manter o modelo visível mesmo sem o marcador
+      AFRAME.registerComponent('marker-handler', {
         init: function () {
           const marker = this.el;
-          const model = this.el.querySelector('a-gltf-model');
-
-          marker.addEventListener('markerLost', () => {
-            // Quando perder tracking, mantém o modelo visível
-            model.setAttribute('visible', true);
-            // Opcional: você pode mudar posição ou adicionar lógica aqui
-          });
+          const model = marker.querySelector('a-gltf-model');
 
           marker.addEventListener('markerFound', () => {
-            // Quando encontrar o marcador, mantém o modelo visível
-            model.setAttribute('visible', true);
+            if (model) model.setAttribute('visible', true);
+          });
+
+          marker.addEventListener('markerLost', () => {
+            // Comentário: Aqui mantemos o modelo visível mesmo sem o marcador
+            if (model) model.setAttribute('visible', true);
           });
         }
       });
@@ -56,13 +54,15 @@
       <!-- luz direcional com intensidade aumentada -->
       <a-entity light="type: directional; color: #ffffff; intensity: 0.7" position="1 1 0.5"></a-entity>
 
-      <!-- marcador Hiro com gestos ativados e componente customizado -->
+      <!-- marcador Hiro com gestos ativados e controle de visibilidade -->
       <a-marker
         preset="hiro"
+        registerevents
+        marker-handler
         raycaster="objects: .clickable"
         emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse"
-        keep-visible-on-marker-lost>
+        cursor="fuse: false; rayOrigin: mouse;"
+      >
         <!-- modelo GLTF interativo -->
         <a-gltf-model
           class="clickable"
@@ -71,8 +71,9 @@
           scale="1 1 1"
           rotation="0 0 0"
           gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
-          horizontal-only-rotation>
-        </a-gltf-model>
+          horizontal-only-rotation
+          visible="true"
+        ></a-gltf-model>
       </a-marker>
 
       <!-- câmera AR -->
