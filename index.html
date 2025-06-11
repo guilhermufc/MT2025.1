@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js – Modelo com rotação horizontal</title>
+    <title>AR.js – Modelo com luz ambiente</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
     <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
@@ -12,32 +12,29 @@
   </head>
   <body>
     <a-scene embedded arjs gesture-detector>
-      <a-marker preset="hiro"
-                raycaster="objects: .clickable"
-                emitevents="true"
-                cursor="fuse: false; rayOrigin: mouse;">
+      
+      <!-- 💡 Luz ambiente: iluminação suave em todo o modelo -->
+      <a-light type="ambient" color="#ffffff" intensity="1"></a-light>
+
+      <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
         
-        <!-- container com gesture-handler -->
-        <a-entity id="model-container"
-                  class="clickable"
-                  gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2">
-          
-          <!-- modelo glTF centralizado -->
+        <!-- container com gesto e modelo -->
+        <a-entity id="model-container" class="clickable" gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2">
           <a-gltf-model
             src="unamds.gltf"
             position="0 0 0"
             scale="0.5 0.5 0.5"
             rotation="0 0 0">
           </a-gltf-model>
-        
         </a-entity>
+
       </a-marker>
 
       <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      // Sobrescreve rotação apenas no eixo Y
+      // Rotação horizontal (eixo Y) com gesto
       AFRAME.registerComponent('gesture-handler', {
         schema: {
           rotationFactor: { default: 5 },
@@ -48,7 +45,6 @@
         init: function () {
           this.handleScale = this.handleScale.bind(this);
           this.handleRotation = this.handleRotation.bind(this);
-          this.isVisible = false;
         },
 
         play: function () {
@@ -63,7 +59,6 @@
 
         handleRotation: function (event) {
           if (!this.el.object3D.visible) return;
-
           const rotation = this.el.getAttribute('rotation');
           rotation.y += event.detail.positionChange.x * this.data.rotationFactor;
           this.el.setAttribute('rotation', rotation);
@@ -71,10 +66,8 @@
 
         handleScale: function (event) {
           if (!this.el.object3D.visible) return;
-
           const scale = this.el.getAttribute('scale');
           let newScale = scale.x * (1 + event.detail.spreadChange / event.detail.startSpread);
-
           newScale = Math.min(this.data.maxScale, Math.max(this.data.minScale, newScale));
           this.el.setAttribute('scale', `${newScale} ${newScale} ${newScale}`);
         }
