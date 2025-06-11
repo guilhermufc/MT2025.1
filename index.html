@@ -1,53 +1,32 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js - Cubo com botão que muda cor</title>
+    <title>AR.js – Cubo com interação por gesto</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
     <style>
       body { margin: 0; overflow: hidden; }
       canvas { position: absolute; top: 0; left: 0; }
-      #colorButton {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        padding: 10px 20px;
-        font-size: 16px;
-        z-index: 10;
-        background: #4CC3D9;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
     </style>
   </head>
   <body>
-    <button id="colorButton">Mudar cor do cubo</button>
-
-    <a-scene embedded arjs>
-      <!-- marcador Hiro -->
-      <a-marker preset="hiro">
-        <!-- cubo -->
-        <a-box id="cube" position="0 0.5 0" rotation="0 45 0" color="#4CC3D9" scale="0.5 0.5 0.5"></a-box>
+    <a-scene embedded arjs gesture-detector>
+      <!-- marcador Hiro com gestos ativados -->
+      <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+        <!-- cubo interativo -->
+        <a-box class="clickable"
+               id="cube"
+               position="0 0.5 0"
+               rotation="0 45 0"
+               scale="0.5 0.5 0.5"
+               color="#4CC3D9"
+               gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2">
+        </a-box>
       </a-marker>
 
       <!-- câmera AR -->
       <a-entity camera></a-entity>
     </a-scene>
-
-    <script>
-      const colors = ['#4CC3D9', '#EF2D5E', '#FFC65D', '#7BC8A4'];
-      let currentColorIndex = 0;
-
-      const button = document.getElementById('colorButton');
-      const cube = document.getElementById('cube');
-
-      button.addEventListener('click', () => {
-        // Muda para a próxima cor do array
-        currentColorIndex = (currentColorIndex + 1) % colors.length;
-        cube.setAttribute('color', colors[currentColorIndex]);
-      });
-    </script>
   </body>
 </html>
