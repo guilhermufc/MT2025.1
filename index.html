@@ -31,11 +31,11 @@
 
   <body>
     <a-scene embedded arjs gesture-detector>
-      <!-- luz ambiente -->
-      <a-entity light="type: ambient; color: #ffffff; intensity: 1"></a-entity>
+      <!-- luz ambiente com intensidade aumentada -->
+      <a-entity light="type: ambient; color: #ffffff; intensity: 2"></a-entity>
 
-      <!-- luz direcional para sombras e destaque -->
-      <a-entity light="type: directional; color: #ffffff; intensity: 0.6" position="1 1 0.5"></a-entity>
+      <!-- luz direcional com intensidade aumentada -->
+      <a-entity light="type: directional; color: #ffffff; intensity: 1.5" position="1 1 0.5"></a-entity>
 
       <!-- marcador Hiro com gestos ativados -->
       <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
