@@ -13,7 +13,7 @@
       canvas { position: absolute; top: 0; left: 0; }
     </style>
 
-    <!-- Rotação apenas no eixo Y -->
+    <!-- Componente: restringe rotação ao eixo Y -->
     <script>
       AFRAME.registerComponent('horizontal-only-rotation', {
         tick: function () {
@@ -29,19 +29,18 @@
         }
       });
 
-      // Componente para mostrar o modelo após o primeiro markerFound
-      AFRAME.registerComponent('show-once-tracked', {
+      // Componente: ativa o modelo após o 1º tracking
+      AFRAME.registerComponent('show-model-once-tracked', {
         init: function () {
-          const model = this.el;
-          model.setAttribute('visible', 'false'); // começa invisível
-
-          const marker = model.parentEl;
+          const model = document.querySelector('#model');
+          const marker = document.querySelector('a-marker');
+          model.setAttribute('visible', 'false');
           let shown = false;
 
           marker.addEventListener('markerFound', () => {
             if (!shown) {
-              model.setAttribute('visible', 'true');
               shown = true;
+              model.setAttribute('visible', 'true');
             }
           });
         }
@@ -50,42 +49,37 @@
   </head>
 
   <body>
-    <a-scene embedded arjs="sourceType: webcam;" gesture-detector>
+    <a-scene embedded arjs="sourceType: webcam;" gesture-detector show-model-once-tracked>
+      
+      <!-- Luzes: 3 pontos + ambiente -->
+      <a-entity light="type: directional; color: #fff; intensity: 0.8" position="2 4 1"></a-entity>
+      <a-entity light="type: directional; color: #fff; intensity: 0.4" position="-2 2 1"></a-entity>
+      <a-entity light="type: directional; color: #fff; intensity: 0.3" position="0 2 -3"></a-entity>
+      <a-entity light="type: ambient; color: #fff; intensity: 0.3"></a-entity>
 
-      <!-- Iluminação de 3 pontos -->
-      <!-- Luz principal -->
-      <a-entity light="type: directional; color: #ffffff; intensity: 0.8" position="2 4 1"></a-entity>
-
-      <!-- Luz de preenchimento -->
-      <a-entity light="type: directional; color: #ffffff; intensity: 0.4" position="-2 2 1"></a-entity>
-
-      <!-- Luz de fundo -->
-      <a-entity light="type: directional; color: #ffffff; intensity: 0.3" position="0 2 -3"></a-entity>
-
-      <!-- Luz ambiente para suavizar -->
-      <a-entity light="type: ambient; color: #ffffff; intensity: 0.3"></a-entity>
-
-      <!-- Marcador com fixação e detecção única -->
+      <!-- Marcador (ancoragem) -->
       <a-marker 
+        id="marker"
         preset="hiro" 
-        raycaster="objects: .clickable" 
         emitevents="true" 
-        cursor="fuse: false; rayOrigin: mouse;"
         arjs-anchor="changeMatrixMode: cameraTransformMatrix">
-
-        <!-- Modelo interativo, inicialmente invisível -->
-        <a-gltf-model
-          class="clickable"
-          src="unamds.gltf"
-          position="0 0 0"
-          scale="1 1 1"
-          rotation="0 0 0"
-          visible="false"
-          gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
-          horizontal-only-rotation
-          show-once-tracked>
-        </a-gltf-model>
       </a-marker>
+
+      <!-- Modelo separado (não visível no início) -->
+      <a-entity
+        id="model"
+        position="0 0 0"
+        scale="1 1 1"
+        rotation="0 0 0"
+        visible="false"
+        gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
+        horizontal-only-rotation>
+        
+        <a-gltf-model 
+          src="unamds.gltf"
+          class="clickable">
+        </a-gltf-model>
+      </a-entity>
 
       <a-entity camera></a-entity>
     </a-scene>
