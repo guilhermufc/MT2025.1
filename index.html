@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js - Modelo Suzanne no marcador Hiro</title>
+    <title>AR.js - Suzanne com Interação por Gestos</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fcor/arjs-gestures@main/dist/aframe-gestures.js"></script>
     <style>
       body { margin: 0; overflow: hidden; }
       canvas { position: absolute; top: 0; left: 0; }
@@ -11,18 +12,19 @@
   </head>
   <body>
     <a-scene embedded arjs>
-      <!-- marcador Hiro -->
+      <!-- Definição do marcador Hiro -->
       <a-marker preset="hiro">
-        <!-- modelo 3D Suzanne -->
-        <a-gltf-model 
-          src="suzanne_blender_monkey.glb" 
-          position="0 0 0" 
-          rotation="0 45 0" 
-          scale="0.5 0.5 0.5">
+        <!-- Modelo 3D Suzanne com gestos de rotação e zoom -->
+        <a-gltf-model
+          src="suzanne_blender_monkey.glb"
+          position="0 0 0"
+          rotation="0 45 0"
+          scale="0.5 0.5 0"
+          gesture-detector>
         </a-gltf-model>
       </a-marker>
 
-      <!-- câmera AR -->
+      <!-- Câmera AR -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
