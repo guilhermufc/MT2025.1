@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js – Modelo interativo com gesto</title>
+    <title>AR.js – Modelo com NFT "meunft"</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/fcor/arjs-gestures@master/dist/gestures.js"></script>
     <style>
       body { margin: 0; overflow: hidden; }
@@ -48,14 +48,27 @@
   </head>
 
   <body>
-    <a-scene embedded arjs gesture-detector shadow="type: pcfsoft">
-      <!-- Luz ambiente fraca -->
-      <a-entity light="type: ambient; color: #aaaaaa; intensity: 1.3"></a-entity>
+    <a-scene
+      embedded
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      gesture-detector
+      shadow="type: pcfsoft">
 
-      <!-- Luz direcional forte simulando sol do Minecraft -->
+      <a-entity light="type: ambient; color: #aaaaaa; intensity: 1.3"></a-entity>
       <a-entity light="type: directional; color: #FFD966; intensity: 1.8" position="2 4 -2" light="castShadow: true"></a-entity>
 
-      <a-marker preset="hiro" persistent-marker raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+      <a-nft
+        type="nft"
+        url="nft/meunft"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance="0.01"
+        smoothThreshold="5"
+        persistent-marker
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;">
+        
         <a-gltf-model
           class="clickable"
           src="unamds.gltf"
@@ -66,7 +79,7 @@
           horizontal-only-rotation
           shadow="cast: true; receive: true">
         </a-gltf-model>
-      </a-marker>
+      </a-nft>
 
       <a-entity camera></a-entity>
     </a-scene>
