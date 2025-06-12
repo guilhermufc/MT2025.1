@@ -48,17 +48,12 @@
   </head>
 
   <body>
-    <a-scene embedded arjs gesture-detector>
-      <!-- Luz ambiente suave, tom quente -->
-      <a-entity light="type: ambient; color: #ffffff; intensity: 0.7"></a-entity>
+    <a-scene embedded arjs gesture-detector shadow="type: pcfsoft">
+      <!-- Luz ambiente fraca -->
+      <a-entity light="type: ambient; color: #aaaaaa; intensity: 0.3"></a-entity>
 
-      <!-- Luz direcional simulando sol baixo, tom alaranjado -->
-      <a-entity light="type: directional; color: #FFCCAA; intensity: 0.7" position="1 2 1"></a-entity>
-
-      <!-- Luzes pontuais suaves com cores quentes -->
-      <a-entity light="type: point; color: #FFCCAA; intensity: 0.7; distance: 10" position="2 1 0"></a-entity>  <!-- Direita -->
-      <a-entity light="type: point; color: #FFCCAA; intensity: 0.7; distance: 10" position="-2 1 0"></a-entity> <!-- Esquerda -->
-      <a-entity light="type: point; color: #FFCCAA; intensity: 0.7; distance: 10" position="0 1 -2"></a-entity> <!-- Atrás -->
+      <!-- Luz direcional forte simulando sol do Minecraft -->
+      <a-entity light="type: directional; color: #FFD966; intensity: 1.2" position="2 4 -2" light="castShadow: true"></a-entity>
 
       <a-marker preset="hiro" persistent-marker raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
         <a-gltf-model
@@ -68,7 +63,8 @@
           scale="1 1 1"
           rotation="0 0 0"
           gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
-          horizontal-only-rotation>
+          horizontal-only-rotation
+          shadow="cast: true; receive: true">
         </a-gltf-model>
       </a-marker>
 
