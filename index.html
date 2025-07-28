@@ -56,16 +56,16 @@
       <a-entity light="type: directional; color: #FFD966; intensity: 1.8" position="2 4 -2" light="castShadow: true"></a-entity>
 
       <a-marker preset="hiro" persistent-marker raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
-        <a-gltf-model
-          class="clickable"
-          src="./models/trem.glb"
+        <a-video
+          src="./models/horizontal.mp4"
+          width="2"
+          height="1"
           position="0 0 0"
-          scale="0.2 0.2 0.2"
-          rotation="0 0 0"
-          gesture-handler="rotationFactor: 5; minScale: 0.3; maxScale: 2"
-          horizontal-only-rotation
-          shadow="cast: true; receive: true">
-        </a-gltf-model>
+          rotation="-90 0 0"
+          autoplay="true"
+          loop="true"
+          class="clickable">
+        </a-video>
       </a-marker>
 
       <a-entity camera></a-entity>
