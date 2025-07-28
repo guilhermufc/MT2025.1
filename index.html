@@ -56,6 +56,7 @@
       <a-entity light="type: directional; color: #FFD966; intensity: 1.8" position="2 4 -2" light="castShadow: true"></a-entity>
 
       <a-marker type="pattern" url="./assets/pattern-trem.patt" persistent-marker raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+        <!-- Exemplo de vídeo -->
         <a-video
           src="./assets/horizontal.mp4"
           position="0 0.50 0"
@@ -64,6 +65,10 @@
           loop="true"
           class="clickable">
         </a-video>
+        <!-- Exemplo de forma customizada -->
+        <a-box position="0 0.5 0" color="#4CC3D9" material="opacity: 0.7;"></a-box>
+        <!-- Exemplo de modelo 3D -->
+        <a-gltf-model src="./assets/trem.glb" position="0 0 0" scale="0.5 0.5 0.5"></a-gltf-model>
       </a-marker>
 
       <a-entity camera></a-entity>
